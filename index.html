@@ -1,487 +1,384 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ParkVision</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkVision</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-* {
-    box-sizing: border-box;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-body {
-    margin: 0;
-    background: #0b1725;
-    color: white;
-    font-family: Arial, sans-serif;
-}
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
 
-header {
-    height: 60px;
-    padding: 0 22px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #101f30;
-    border-bottom: 1px solid #29425a;
-}
+        .header h1 {
+            font-size: 36px;
+            color: #4fc3f7;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
 
-.brand {
-    font-size: 20px;
-    font-weight: bold;
-}
+        .header .subtitle {
+            font-size: 14px;
+            color: #90a4ae;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
 
-.brand span {
-    color: #79b8ed;
-}
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
 
-.live {
-    font-size: 11px;
-    color: #ff777b;
-}
+        .nav-item {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(79, 195, 247, 0.3);
+            border-radius: 6px;
+            color: #b0bec5;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
 
-.live i {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #ed4c53;
-    margin-right: 7px;
-}
+        .nav-item:hover,
+        .nav-item.active {
+            background: rgba(79, 195, 247, 0.15);
+            color: #4fc3f7;
+            border-color: #4fc3f7;
+        }
 
-main {
-    height: calc(100vh - 130px);
-    min-height: 470px;
-    padding: 16px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
+        /* Главный контейнер — кнопки сверху, карта снизу */
+        .parking-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-.panel {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    background: #12243a;
-    border: 1px solid #2b455e;
-    border-radius: 11px;
-    overflow: hidden;
-}
+        /* Панель управления — отдельный блок НАД картой */
+        .control-panel {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(79, 195, 247, 0.2);
+            border-radius: 10px;
+            flex-wrap: wrap;
+        }
 
-.heading {
-    padding: 12px 15px;
-    border-bottom: 1px solid #2b455e;
-    font-weight: bold;
-}
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
 
-.heading small {
-    display: block;
-    margin-top: 4px;
-    color: #90a9c0;
-    font-size: 11px;
-    font-weight: normal;
-}
+        .btn-start {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+        }
 
-.videoarea {
-    flex: 1;
-    min-height: 0;
-    background: #050a10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(46, 204, 113, 0.5);
+        }
 
-video {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    background: black;
-}
+        .btn-start:active {
+            transform: translateY(0);
+        }
 
-/* Карта парковки */
+        .btn-reset {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
 
-.maparea {
-    flex: 1;
-    min-height: 0;
-    padding: 14px;
-    background: #145487;
-    display: flex;
-}
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(231, 76, 60, 0.5);
+        }
 
-.parking {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    min-height: 320px;
-    padding: 13px 12px;
+        .btn-reset:active {
+            transform: translateY(0);
+        }
 
-    background: #777d80;
-    border: 2px solid #b9c1c4;
-    border-radius: 5px;
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
 
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: repeat(7, 1fr);
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            font-size: 13px;
+            color: #90a4ae;
+        }
 
-    column-gap: 15px;
-    row-gap: 7px;
-    overflow: hidden;
-}
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #78909c;
+        }
 
-/* Центральная линия парковки */
+        .status-dot.active {
+            background: #2ecc71;
+            box-shadow: 0 0 8px #2ecc71;
+            animation: pulse 1.5s infinite;
+        }
 
-.parking::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    width: 15px;
-    transform: translateX(-50%);
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
 
-    background: #777d80;
-    border-left: 2px solid #dce2e4;
-    border-right: 2px solid #dce2e4;
+        /* Контейнер карты */
+        .map-container {
+            position: relative;
+            width: 100%;
+            background: #0f1419;
+            border: 1px solid rgba(79, 195, 247, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
 
-    z-index: 0;
-}
+        #parkingCanvas {
+            display: block;
+            width: 100%;
+            height: 500px;
+        }
 
-/* Парковочное место */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
 
-.space {
-    position: relative;
-    z-index: 1;
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #b0bec5;
+        }
 
-    border: 2px solid #e6e9e8;
-    border-radius: 7px;
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    box-shadow: 0 2px 4px #0003;
-    transition: background-color 0.2s;
-}
-
-.space.red {
-    background: #d83e48;
-}
-
-.space.yellow {
-    background: #e7b637;
-}
-
-.space.green {
-    background: #269d5c;
-}
-
-/* Кнопки */
-
-.controls {
-    height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-
-    background: #101f30;
-    border-top: 1px solid #29425a;
-}
-
-button {
-    min-width: 150px;
-    padding: 13px 25px;
-    border: 0;
-    border-radius: 8px;
-
-    background: #1677c8;
-    color: white;
-
-    font-size: 15px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #218be0;
-}
-
-button.secondary {
-    background: #344b62;
-}
-
-button.secondary:hover {
-    background: #45627e;
-}
-
-/* Адаптация под телефон */
-
-@media (max-width: 800px) {
-    main {
-        height: auto;
-        grid-template-columns: 1fr;
-        padding: 10px;
-    }
-
-    .panel {
-        height: 46vh;
-        min-height: 310px;
-    }
-
-    .controls {
-        position: sticky;
-        bottom: 0;
-    }
-}
-</style>
+        @media (max-width: 600px) {
+            .header h1 { font-size: 28px; }
+            .btn { padding: 10px 20px; font-size: 14px; }
+            #parkingCanvas { height: 350px; }
+        }
+    </style>
 </head>
-
 <body>
-
-<header>
-    <div class="brand">
-        <span>Park</span>Vision
+    <div class="header">
+        <h1>ParkVision</h1>
+        <div class="subtitle">Демонстрация</div>
     </div>
 
-    <div class="live">
-        <i></i>ДЕМОНСТРАЦИЯ
+    <nav class="nav">
+        <div class="nav-item active">Видеонаблюдение</div>
+        <div class="nav-item">Камера парковки</div>
+        <div class="nav-item">Карта парковки</div>
+        <div class="nav-item">Схема парковочных мест</div>
+    </nav>
+
+    <div class="parking-container">
+        <!-- Панель управления: кнопки В РЯД, не налезают друг на друга -->
+        <div class="control-panel">
+            <button id="startBtn" class="btn btn-start">▶ Запустить</button>
+            <button id="resetBtn" class="btn btn-reset">↺ Сначала</button>
+            <div class="status-indicator">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">Ожидание</span>
+            </div>
+        </div>
+
+        <!-- Карта парковки -->
+        <div class="map-container">
+            <canvas id="parkingCanvas"></canvas>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background:#2ecc71"></div>
+                <span>Свободно</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background:#e74c3c"></div>
+                <span>Занято</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background:#f39c12"></div>
+                <span>Движение</span>
+            </div>
+        </div>
     </div>
-</header>
 
-<main>
+    <script>
+        const canvas = document.getElementById('parkingCanvas');
+        const ctx = canvas.getContext('2d');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
 
-    <!-- ВИДЕО -->
+        let animationId = null;
+        let cars = [];
+        let spots = [];
+        let running = false;
 
-    <section class="panel">
-
-        <div class="heading">
-            Видеонаблюдение
-            <small>Камера парковки</small>
-        </div>
-
-        <div class="videoarea">
-            <video
-                id="video"
-                src="parking_crop.mp4"
-                preload="auto"
-                playsinline>
-            </video>
-        </div>
-
-    </section>
-
-    <!-- КАРТА -->
-
-    <section class="panel">
-
-        <div class="heading">
-            Карта парковки
-            <small>Схема парковочных мест</small>
-        </div>
-
-        <div class="maparea">
-            <div class="parking" id="parking"></div>
-        </div>
-
-    </section>
-
-</main>
-
-<!-- УПРАВЛЕНИЕ -->
-
-<div class="controls">
-
-    <button id="start">
-        ▶ Запустить
-    </button>
-
-    <button class="secondary" id="reset">
-        ↺ Сначала
-    </button>
-
-</div>
-
-<script>
-
-// Получаем видео и карту
-
-const video = document.getElementById("video");
-const parking = document.getElementById("parking");
-
-// Создаём 14 парковочных мест
-
-const cells = [];
-
-for (let row = 0; row < 7; row++) {
-
-    for (let col = 0; col < 2; col++) {
-
-        const el = document.createElement("div");
-
-        el.className = "space red";
-
-        // Индексы для логики:
-        // A1-A7 — первый столбец
-        // B1-B7 — второй столбец
-
-        const id = (col === 0 ? "A" : "B") + (row + 1);
-
-        el.dataset.id = id;
-
-        parking.appendChild(el);
-
-        cells.push({
-            id: id,
-            el: el
-        });
-    }
-}
-
-
-// Определяем цвет парковочного места
-// в зависимости от времени видео
-
-function stateAt(id, time) {
-
-    // A2 всегда свободно
-
-    if (id === "A2") {
-        return "green";
-    }
-
-    // B6:
-    // 0–6.5 секунд — жёлтое
-    // После 6.5 секунд — зелёное
-
-    if (id === "B6") {
-
-        return time < 6.5
-            ? "yellow"
-            : "green";
-    }
-
-    // B3:
-    // 0–5 секунд — красное
-    // 5–16 секунд — жёлтое
-    // После 16 секунд — зелёное
-
-    if (id === "B3") {
-
-        if (time < 5) {
-            return "red";
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            initSpots();
+            draw();
         }
 
-        if (time < 16) {
-            return "yellow";
+        function initSpots() {
+            spots = [];
+            const rows = 3;
+            const cols = 10;
+            const spotW = 50;
+            const spotH = 80;
+            const startX = (canvas.width - cols * (spotW + 10)) / 2;
+            const startY = 60;
+
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    spots.push({
+                        x: startX + c * (spotW + 10),
+                        y: startY + r * (spotH + 40),
+                        w: spotW,
+                        h: spotH,
+                        occupied: Math.random() > 0.6
+                    });
+                }
+            }
         }
 
-        return "green";
-    }
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Все остальные места заняты
+            // Дороги
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([10, 10]);
+            for (let r = 0; r < 3; r++) {
+                const y = 60 + r * 120 + 100;
+                ctx.beginPath();
+                ctx.moveTo(20, y);
+                ctx.lineTo(canvas.width - 20, y);
+                ctx.stroke();
+            }
+            ctx.setLineDash([]);
 
-    return "red";
-}
+            // Места
+            spots.forEach(spot => {
+                ctx.fillStyle = spot.occupied ? 'rgba(231, 76, 60, 0.2)' : 'rgba(46, 204, 113, 0.15)';
+                ctx.strokeStyle = spot.occupied ? '#e74c3c' : '#2ecc71';
+                ctx.lineWidth = 2;
+                ctx.fillRect(spot.x, spot.y, spot.w, spot.h);
+                ctx.strokeRect(spot.x, spot.y, spot.w, spot.h);
+            });
 
+            // Машины
+            cars.forEach(car => {
+                ctx.fillStyle = '#f39c12';
+                ctx.fillRect(car.x, car.y, 30, 50);
+                ctx.fillStyle = '#fff';
+                ctx.font = '10px sans-serif';
+                ctx.fillText('🚗', car.x + 5, car.y + 30);
+            });
+        }
 
-// Обновляем цвета карты
+        function animate() {
+            cars.forEach(car => {
+                car.y += 1.5;
+                if (car.y > canvas.height) {
+                    car.y = -50;
+                    car.x = 50 + Math.random() * (canvas.width - 100);
+                }
+            });
+            draw();
+            animationId = requestAnimationFrame(animate);
+        }
 
-function updateMap() {
+        function start() {
+            if (running) return;
+            running = true;
+            cars = [];
+            for (let i = 0; i < 3; i++) {
+                cars.push({
+                    x: 50 + Math.random() * (canvas.width - 100),
+                    y: -50 - i * 100
+                });
+            }
+            statusDot.classList.add('active');
+            statusText.textContent = 'Работает';
+            startBtn.disabled = true;
+            animate();
+        }
 
-    const time = video.currentTime || 0;
+        function reset() {
+            running = false;
+            if (animationId) cancelAnimationFrame(animationId);
+            cars = [];
+            initSpots();
+            draw();
+            statusDot.classList.remove('active');
+            statusText.textContent = 'Ожидание';
+            startBtn.disabled = false;
+        }
 
-    cells.forEach(({ id, el }) => {
+        startBtn.addEventListener('click', start);
+        resetBtn.addEventListener('click', reset);
+        window.addEventListener('resize', resizeCanvas);
 
-        const state = stateAt(id, time);
-
-        el.className = "space " + state;
-
-    });
-
-}
-
-
-// Кнопка запуска / паузы
-
-document.getElementById("start").addEventListener("click", async () => {
-
-    if (!video.paused) {
-
-        video.pause();
-
-        return;
-    }
-
-    try {
-
-        await video.play();
-
-    } catch (error) {
-
-        alert(
-            "Не удалось запустить видео. " +
-            "Проверьте наличие parking_crop.mp4 рядом с index.html."
-        );
-
-    }
-
-});
-
-
-// Синхронизация карты с видео
-
-video.addEventListener("timeupdate", updateMap);
-
-video.addEventListener("seeked", updateMap);
-
-
-// Видео закончилось
-
-video.addEventListener("ended", () => {
-
-    document.getElementById("start").textContent = "▶ Запустить";
-
-    updateMap();
-
-});
-
-
-// Меняем текст кнопки при паузе
-
-video.addEventListener("play", () => {
-
-    document.getElementById("start").textContent = "Ⅱ Пауза";
-
-});
-
-video.addEventListener("pause", () => {
-
-    document.getElementById("start").textContent = "▶ Запустить";
-
-});
-
-
-// Кнопка «Сначала»
-
-document.getElementById("reset").addEventListener("click", () => {
-
-    video.pause();
-
-    video.currentTime = 0;
-
-    updateMap();
-
-});
-
-
-// Первоначальное состояние карты
-
-updateMap();
-
-</script>
-
+        resizeCanvas();
+    </script>
 </body>
 </html>
-
